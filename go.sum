@@ -1,0 +1,4 @@
+github.com/ParvizBoymurodov/managers-core v0.0.0-20200213134105-ea2e1cc2ec7b h1:Fp+mm/ifcyAAfh40SKTzspRnPLiHI2t/RZPU5JiIw4s=
+github.com/ParvizBoymurodov/managers-core v0.0.0-20200213134105-ea2e1cc2ec7b/go.mod h1:TlibPjxBDXMHt8wH3QAj0nhemf5Dg9jd1VdKrXvqOKU=
+github.com/mattn/go-sqlite3 v2.0.3+incompatible h1:gXHsfypPkaMZrKbD5209QV9jbUTJKjyR5WD3HYQSd+U=
+github.com/mattn/go-sqlite3 v2.0.3+incompatible/go.mod h1:FPy6KqzDD04eiIsT53CuJW3U88zkxoIYsOqkbpncsNc=
