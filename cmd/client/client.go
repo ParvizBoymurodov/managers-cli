@@ -207,9 +207,9 @@ func handleLoginForClient(db *sql.DB) (id int64,ok bool, err error) {
 
 func transaction(db *sql.DB)(err error)  {
 
-	var PHoneNumber int64
+	var myPhoneNumber int64
 	fmt.Print("Введите свой номер телефон: ")
-	_, err = fmt.Scan(&PHoneNumber)
+	_, err = fmt.Scan(&myPhoneNumber)
 	if err != nil {
 		return err
 	}
@@ -217,6 +217,11 @@ func transaction(db *sql.DB)(err error)  {
 	fmt.Print("Введите номер телефон клиента: ")
 	_, err = fmt.Scan(&phoneNumber)
 	if err != nil {
+		return err
+	}
+	err = core.CheckByPhoneNumber(phoneNumber, db)
+	if err != nil {
+		fmt.Println("fddsdf")
 		return err
 	}
 	var balance uint64
@@ -230,7 +235,7 @@ func transaction(db *sql.DB)(err error)  {
 	err = core.TransactionMinus(core.Client{
 		Id:            0,
 		Balance:       balance,
-		PhoneNumber:   PHoneNumber,
+		PhoneNumber:   myPhoneNumber,
 	}, db)
 
 	if err != nil {
@@ -238,8 +243,8 @@ func transaction(db *sql.DB)(err error)  {
 		fmt.Println("Извините у вас мало денег")
 		return err
 	}else {
-		if PHoneNumber == phoneNumber {
-			fmt.Println("Так не надо")
+		if  myPhoneNumber == phoneNumber {
+			fmt.Println("Схожие номера ")
 			authorizedOperationsLoop(db,"2",1)
 		}}
 
@@ -253,9 +258,9 @@ func transaction(db *sql.DB)(err error)  {
 
 func transactionByBalanceNumber(db *sql.DB)(err error)  {
 
-	var BAlanceNumber uint64
+	var mybalanceNumber uint64
 	fmt.Print("Введите номер своего баланса: ")
-	_, err = fmt.Scan(&BAlanceNumber)
+	_, err = fmt.Scan(&mybalanceNumber)
 	if err != nil {
 		return err
 	}
@@ -263,6 +268,11 @@ func transactionByBalanceNumber(db *sql.DB)(err error)  {
 	fmt.Print("Введите номер баланс клиента: ")
 	_, err = fmt.Scan(&balanceNumber)
 	if err != nil {
+		return err
+	}
+	err = core.CheckByBalanceNumber(balanceNumber, db)
+	if err !=nil{
+		fmt.Println("щшфырыфр")
 		return err
 	}
 	var balance uint64
@@ -276,16 +286,15 @@ func transactionByBalanceNumber(db *sql.DB)(err error)  {
 	err = core.TransactionBalanceNumberMinus(core.Client{
 		Id: 0,
 		Balance: balance,
-		BalanceNumber: BAlanceNumber,
+		BalanceNumber: mybalanceNumber,
 	}, db)
 
 	if err != nil {
-
 		fmt.Println("Извините у вас мало денег")
 		return err
 	}else {
-		if BAlanceNumber == balanceNumber {
-			fmt.Println("Так надо")
+		if mybalanceNumber == balanceNumber {
+			fmt.Println("Так не надо")
 			authorizedOperationsLoop(db,"3",1)
 			}}
 

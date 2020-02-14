@@ -1232,3 +1232,24 @@
 2020/02/13 17:59:18 start application
 2020/02/13 17:59:18 open db
 2020/02/13 17:59:18 start operations loop
+2020/02/14 12:29:44 start application
+2020/02/14 12:29:44 open db
+2020/02/14 12:29:45 start operations loop
+2020/02/14 12:39:09 start application
+2020/02/14 12:39:09 open db
+2020/02/14 12:39:09 start operations loop
+2020/02/14 14:17:09 start application
+2020/02/14 14:17:09 open db
+2020/02/14 14:17:09 start operations loop
+2020/02/14 14:17:26 can't get all products: sql: no rows in result set
+2020/02/14 14:36:28 start application
+2020/02/14 14:36:28 open db
+2020/02/14 14:36:28 start operations loop
+2020/02/14 14:36:54 can't get all products: sql: no rows in result set
+2020/02/14 14:44:09 start application
+2020/02/14 14:44:09 open db
+2020/02/14 14:44:09 start operations loop
+2020/02/14 14:47:56 start application
+2020/02/14 14:47:56 open db
+2020/02/14 14:47:56 start operations loop
+2020/02/14 14:49:17 can't get all products: CHECK constraint failed: client
