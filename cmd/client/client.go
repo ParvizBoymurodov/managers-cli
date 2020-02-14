@@ -11,19 +11,6 @@ import (
 )
 
 
-// TODO: для тех, кто хочет попробовать, можете использовать структуры и методы:
-//type manager struct {
-//	db  *sql.DB
-//	out io.Writer
-//	in  io.Reader
-//}
-//
-//func newManagerCLI(db *sql.DB, out io.Writer, in io.Reader) *manager {
-//	return &manager{db: db, out: out, in: in}
-//}
-
-// Writer, Reader
-
 func main() {
 	// os.Stdin, os.Stout, os.Stderr, File
 	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
@@ -111,15 +98,13 @@ func authorizedOperationsLoop(db *sql.DB, cmd string,user_id int64) (exit bool) 
 		err:=transaction(db)
 		if err != nil {
 			log.Printf("can't get all products: %v", err)
-			authorizedOperationsLoop(db,"2",1)
-			return true // TODO: may be log fatal
+			return false // TODO: may be log fatal
 		}
 	case "3":
 		err:=transactionByBalanceNumber(db)
 		if err != nil {
 			log.Printf("can't get all products: %v", err)
-			authorizedOperationsLoop(db,"3",1)
-			return true // TODO: may be log fatal
+			return false // TODO: may be log fatal
 		}
 	case "4":
 		serviceList, err := core.GetServices(db)
@@ -231,36 +216,26 @@ func transaction(db *sql.DB)(err error)  {
 		return err
 	}
 
-
-	err = core.TransactionMinus(core.Client{
-		Id:            0,
-		Balance:       balance,
-		PhoneNumber:   myPhoneNumber,
+	err = core.TransferByPhoneNumber(myPhoneNumber, balance, core.Client{
+		Balance:     balance,
+		PhoneNumber: phoneNumber,
 	}, db)
-
 	if err != nil {
-
 		fmt.Println("Извините у вас мало денег")
 		return err
-	}else {
-		if  myPhoneNumber == phoneNumber {
-			fmt.Println("Схожие номера ")
-			authorizedOperationsLoop(db,"2",1)
-		}}
-
-	err = core.TransactionPlus(phoneNumber,balance, db)
-	if err != nil {
+	}else if myPhoneNumber==phoneNumber {
+		fmt.Println("Yt yflj nfr")
 		return err
 	}
-		fmt.Println("Счет клиента успешно добавлен!")
+		fmt.Println("Денги переведенный успешно переведенный!")
 		return nil
 }
 
 func transactionByBalanceNumber(db *sql.DB)(err error)  {
 
-	var mybalanceNumber uint64
+	var myBalanceNumber uint64
 	fmt.Print("Введите номер своего баланса: ")
-	_, err = fmt.Scan(&mybalanceNumber)
+	_, err = fmt.Scan(&myBalanceNumber)
 	if err != nil {
 		return err
 	}
@@ -283,25 +258,18 @@ func transactionByBalanceNumber(db *sql.DB)(err error)  {
 	}
 
 
-	err = core.TransactionBalanceNumberMinus(core.Client{
-		Id: 0,
-		Balance: balance,
-		BalanceNumber: mybalanceNumber,
+	err = core.TransferByBalanceNumber(myBalanceNumber, balance, core.Client{
+		Balance:     balance,
+		BalanceNumber: balanceNumber,
 	}, db)
-
 	if err != nil {
 		fmt.Println("Извините у вас мало денег")
 		return err
-	}else {
-		if mybalanceNumber == balanceNumber {
-			fmt.Println("Так не надо")
-			authorizedOperationsLoop(db,"3",1)
-			}}
-
-	err = core.TransactionBalanceNumberPlus(balanceNumber,balance, db)
-	if err != nil {
+	}else if myBalanceNumber==balanceNumber {
+		fmt.Println("Yt yflj nfr")
 		return err
 	}
-	fmt.Println("Счет клиента успешно добавлен!")
+	fmt.Println("Денги переведенный успешно переведенный!")
 	return nil
+
 }

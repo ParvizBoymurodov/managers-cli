@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"database/sql"
 	"fmt"
 	"github.com/ParvizBoymurodov/managers-core/pkg/core"
@@ -25,7 +24,6 @@ import (
 // Writer, Reader
 
 func main() {
-	// os.Stdin, os.Stout, os.Stderr, File
 	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
@@ -80,8 +78,6 @@ func unauthorizedOperationsLoop(db *sql.DB, cmd string) (exit bool) {
 		}
 		if !ok {
 			fmt.Println("Неправильно введён логин или пароль. Попробуйте ещё раз.")
-			//unauthorizedOperationsLoop(db, "1")
-			//Graceful shutdown
 			return false
 		}
 		operationsLoop(db, authorizedOperations, authorizedOperationsLoop)
@@ -100,15 +96,13 @@ func authorizedOperationsLoop(db *sql.DB, cmd string) (exit bool) {
 		err := addClient(db)
 		if err != nil {
 			log.Printf("can't get all products: %v", err)
-			authorizedOperationsLoop(db, "1")
-			return true // TODO: may be log fatal
+			return false // TODO: may be log fatal
 		}
 	case "2":
 		err := updateBalance(db)
 		if err != nil {
 			log.Printf("can't get all products: %v", err)
-			authorizedOperationsLoop(db, "2")
-			return true
+			return false
 		}
 	case "3":
 		err := addServices(db)
@@ -157,9 +151,9 @@ func handleLogin(db *sql.DB) (ok bool, err error) {
 
 func addClient(db *sql.DB) (err error) {
 	fmt.Println("Введите данные клиента")
+	var name string
 	fmt.Print("Имя клиента: ")
-	reader := bufio.NewReader(os.Stdin)
-	name, err := reader.ReadString('\n')
+	_, err = fmt.Scan(&name)
 	if err != nil {
 		return err
 	}
@@ -213,13 +207,13 @@ func addClient(db *sql.DB) (err error) {
 }
 func addAtm(db *sql.DB) (err error) {
 	fmt.Println("Введите данные банкомата")
+	var name string
 	fmt.Print("Имя бокамата: ")
-	reader := bufio.NewReader(os.Stdin)
-	name, err := reader.ReadString('\n')
+	_, err = fmt.Scan(&name)
 	if err != nil {
 		return err
 	}
-	//name = name[:len(name)-2]
+
 	var street string
 	fmt.Print("Где находится банкомат: ")
 	_, err = fmt.Scan(&street)
@@ -240,14 +234,13 @@ func addAtm(db *sql.DB) (err error) {
 }
 
 func addServices(db *sql.DB) (err error) {
-
+	var name string
 	fmt.Print("Название услиги: ")
-	reader := bufio.NewReader(os.Stdin)
-	name, err := reader.ReadString('\n')
+	_, err = fmt.Scan(&name)
 	if err != nil {
 		return err
 	}
-	//name = name[:len(name)-1]
+
 	var price int64
 	fmt.Print("Стоимость услуги: ")
 	_, err = fmt.Scan(&price)
@@ -266,65 +259,25 @@ func addServices(db *sql.DB) (err error) {
 	return nil
 }
 
-//func addBalanceForClient(db *sql.DB) (err error) {
-//	fmt.Print("Логин клиента, которого вы хотите пополнить баланс: ")
-//	reader := bufio.NewReader(os.Stdin)
-//	loginClient, err := reader.ReadString('\n')
-//	if err != nil {
-//		return err
-//	}
-//
-//	//loginClient = loginClient[:len(loginClient)-2]
-//	var balanceNumber int64
-//	fmt.Print("Номер счёта: ")
-//	_, err = fmt.Scan(&balanceNumber)
-//	if err != nil {
-//		return err
-//	}
-//	var balance uint64
-//	fmt.Print("Пополнить счёт клиента: ")
-//	_, err = fmt.Scan(&balance)
-//	if err != nil {
-//		return err
-//	}
-//	err = core.AddBalanceForClient(core.Client{
-//		Id:            0,
-//		BalanceNumber: balanceNumber,
-//		LoginClient:   loginClient,
-//		Balance:      balance,
-//	}, db)
-//	if err != nil {
-//		return err
-//	}
-//	fmt.Println("Счёт успешно зачислен!")
-//	return nil
-//}
 func updateBalance(db *sql.DB) (err error) {
 	fmt.Println("Введите данные клиента")
-	var id int64
-	fmt.Print("Введите Id клиента: ")
-	_, err = fmt.Scan(&id)
+	var login string
+	fmt.Print("Введите логин клиента: ")
+	_, err = fmt.Scan(&login)
 	if err != nil {
 		return err
 	}
+
 	var balance uint64
 	fmt.Print("Введите пополняемую сумму: ")
 	_, err = fmt.Scan(&balance)
 	if err != nil {
 		return err
 	}
-	var name, login, password string
-	var balanceNumber uint64
-	var phoneNumber int64
 
 	err = core.UpdateBalance(core.Client{
-		Id:            id,
-		Name:          name,
 		Login:         login,
-		Password:      password,
 		Balance:       balance,
-		BalanceNumber: balanceNumber,
-		PhoneNumber:   phoneNumber,
 	}, db)
 	if err != nil {
 		return err
