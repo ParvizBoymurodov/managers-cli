@@ -1338,3 +1338,61 @@
 2020/02/14 21:58:24 open db
 2020/02/14 21:58:24 start operations loop
 2020/02/14 21:58:56 can't get all products: UNIQUE constraint failed: client.login
+2020/02/14 22:40:33 start application
+2020/02/14 22:40:33 open db
+2020/02/14 22:40:33 start operations loop
+2020/02/14 22:44:00 can't get all products: sql: no rows in result set
+2020/02/14 22:51:51 start application
+2020/02/14 22:51:51 open db
+2020/02/14 22:51:51 start operations loop
+2020/02/14 22:53:44 start application
+2020/02/14 22:53:44 open db
+2020/02/14 22:53:44 start operations loop
+2020/02/14 23:43:55 start application
+2020/02/14 23:43:55 open db
+2020/02/14 23:43:55 can't init db: no such column: price
+2020/02/14 23:47:24 start application
+2020/02/14 23:47:24 open db
+2020/02/14 23:47:24 can't init db: no such column: price
+2020/02/14 23:48:29 start application
+2020/02/14 23:48:29 open db
+2020/02/14 23:48:29 can't init db: no such column: price
+2020/02/14 23:51:40 start application
+2020/02/14 23:51:40 open db
+2020/02/14 23:51:40 can't init db: no such column: price
+2020/02/14 23:56:03 start application
+2020/02/14 23:56:03 open db
+2020/02/14 23:56:03 can't init db: near ")": syntax error
+2020/02/14 23:56:47 start application
+2020/02/14 23:56:47 open db
+2020/02/14 23:56:48 start operations loop
+2020/02/14 23:57:48 start application
+2020/02/14 23:57:48 open db
+2020/02/14 23:57:48 start operations loop
+2020/02/14 23:57:59 start application
+2020/02/14 23:57:59 open db
+2020/02/14 23:57:59 start operations loop
+2020/02/14 23:59:29 can't get all products: sql: no rows in result set
+2020/02/15 00:07:49 can't get all products: sql: no rows in result set
+2020/02/15 00:10:27 start application
+2020/02/15 00:10:27 open db
+2020/02/15 00:10:27 start operations loop
+2020/02/15 00:10:47 can't get all products: sql: no rows in result set
+2020/02/15 00:16:34 start application
+2020/02/15 00:16:34 open db
+2020/02/15 00:16:34 start operations loop
+2020/02/15 00:19:20 start application
+2020/02/15 00:19:20 open db
+2020/02/15 00:19:20 start operations loop
+2020/02/15 00:29:10 start application
+2020/02/15 00:29:10 open db
+2020/02/15 00:29:10 start operations loop
+2020/02/15 00:42:35 start application
+2020/02/15 00:42:35 open db
+2020/02/15 00:42:35 start operations loop
+2020/02/15 00:53:06 start application
+2020/02/15 00:53:06 open db
+2020/02/15 00:53:06 start operations loop
+2020/02/15 01:21:02 start application
+2020/02/15 01:21:02 open db
+2020/02/15 01:21:02 start operations loop

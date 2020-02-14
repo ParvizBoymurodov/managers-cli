@@ -241,16 +241,15 @@ func addServices(db *sql.DB) (err error) {
 		return err
 	}
 
-	var price int64
+	var balance uint64
 	fmt.Print("Стоимость услуги: ")
-	_, err = fmt.Scan(&price)
+	_, err = fmt.Scan(&balance)
 	if err != nil {
 		return err
 	}
 	err = core.AddServices(core.Services{
-		Id:    0,
 		Name:  name,
-		Price: price,
+		Balance: balance,
 	}, db)
 	if err != nil {
 		return err

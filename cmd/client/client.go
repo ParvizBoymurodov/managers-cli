@@ -12,7 +12,6 @@ import (
 
 
 func main() {
-	// os.Stdin, os.Stout, os.Stderr, File
 	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
@@ -113,7 +112,14 @@ func authorizedOperationsLoop(db *sql.DB, cmd string,user_id int64) (exit bool) 
 			return true // TODO: may be log fatal
 		}
 		printServiceList(serviceList)
+
 	case "5":
+		err:=payForServices(db)
+		if err != nil {
+			log.Printf("can't get all products: %v", err)
+			return false // TODO: may be log fatal
+		}
+	case "6":
 		atms, err := core.GetAllAtms(db)
 		if err != nil {
 			log.Printf("can't get all products: %v", err)
@@ -121,7 +127,6 @@ func authorizedOperationsLoop(db *sql.DB, cmd string,user_id int64) (exit bool) 
 		}
 		printAtm(atms)
 
-	
 	case "q":
 		return true
 	default:
@@ -157,10 +162,10 @@ func printClientBalance(listBalance []core.Client)  {
 func printServiceList(serviceList []core.Services)  {
 	for _, listService := range serviceList {
 		fmt.Printf(
-			"id: %d, name: %s, price:%d\n",
+			"id: %d, name: %s, balance:%d\n",
 			listService.Id,
 			listService.Name,
-			listService.Price,
+			listService.Balance,
 
 		)
 	}
@@ -192,9 +197,9 @@ func handleLoginForClient(db *sql.DB) (id int64,ok bool, err error) {
 
 func transaction(db *sql.DB)(err error)  {
 
-	var myPhoneNumber int64
-	fmt.Print("Введите свой номер телефон: ")
-	_, err = fmt.Scan(&myPhoneNumber)
+	var balanceNumber uint64
+	fmt.Print("Введите  номер своего счёта телефон: ")
+	_, err = fmt.Scan(&balanceNumber)
 	if err != nil {
 		return err
 	}
@@ -206,7 +211,7 @@ func transaction(db *sql.DB)(err error)  {
 	}
 	err = core.CheckByPhoneNumber(phoneNumber, db)
 	if err != nil {
-		fmt.Println("fddsdf")
+		fmt.Println("Такого номера не существует")
 		return err
 	}
 	var balance uint64
@@ -216,18 +221,15 @@ func transaction(db *sql.DB)(err error)  {
 		return err
 	}
 
-	err = core.TransferByPhoneNumber(myPhoneNumber, balance, core.Client{
-		Balance:     balance,
+	err = core.TransferByPhoneNumber(balanceNumber, balance, core.Client{
+		Balance:    balance,
 		PhoneNumber: phoneNumber,
 	}, db)
 	if err != nil {
 		fmt.Println("Извините у вас мало денег")
 		return err
-	}else if myPhoneNumber==phoneNumber {
-		fmt.Println("Yt yflj nfr")
-		return err
 	}
-		fmt.Println("Денги переведенный успешно переведенный!")
+		fmt.Println("Денги успешно переведенный!")
 		return nil
 }
 
@@ -247,7 +249,10 @@ func transactionByBalanceNumber(db *sql.DB)(err error)  {
 	}
 	err = core.CheckByBalanceNumber(balanceNumber, db)
 	if err !=nil{
-		fmt.Println("щшфырыфр")
+		fmt.Println("Не  существует клиент с таким номером счетом!")
+		return err
+	}else if myBalanceNumber==balanceNumber {
+		fmt.Println("Номер по которому вы хотите совершить перевод совпадает с вашим номером!")
 		return err
 	}
 	var balance uint64
@@ -265,8 +270,45 @@ func transactionByBalanceNumber(db *sql.DB)(err error)  {
 	if err != nil {
 		fmt.Println("Извините у вас мало денег")
 		return err
-	}else if myBalanceNumber==balanceNumber {
-		fmt.Println("Yt yflj nfr")
+	}
+	fmt.Println("Денги успешно переведенный!")
+	return nil
+
+}
+
+func payForServices(db *sql.DB)(err error){
+	var balanceNumber uint64
+	fmt.Print("Введите номер своего баланса: ")
+	_, err = fmt.Scan(&balanceNumber)
+	if err != nil {
+		return err
+	}
+
+	var id int64
+	fmt.Print("Введите Id услугу: ")
+	_, err = fmt.Scan(&id)
+	if err != nil {
+		return err
+	}
+
+	err = core.CheckId(id, db)
+	if err != nil {
+		fmt.Println("Услуга по такому Id не существует")
+		return err
+	}
+	var balance uint64
+	fmt.Print("Введите пополняемую сумму: ")
+	_, err = fmt.Scan(&balance)
+	if err != nil {
+		return err
+	}
+
+
+	err = core.PayForServices(balanceNumber,balance, core.Services{
+		Id:      id,
+		Balance: balance,
+	}, db)
+	if err != nil {
 		return err
 	}
 	fmt.Println("Денги переведенный успешно переведенный!")
