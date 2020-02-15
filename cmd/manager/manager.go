@@ -10,19 +10,6 @@ import (
 	"strings"
 )
 
-// TODO: для тех, кто хочет попробовать, можете использовать структуры и методы:
-//type manager struct {
-//	db  *sql.DB
-//	out io.Writer
-//	in  io.Reader
-//}
-//
-//func newManagerCLI(db *sql.DB, out io.Writer, in io.Reader) *manager {
-//	return &manager{db: db, out: out, in: in}
-//}
-
-// Writer, Reader
-
 func main() {
 	file, err := os.OpenFile("log.txt", os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
 	if err != nil {
@@ -96,7 +83,7 @@ func authorizedOperationsLoop(db *sql.DB, cmd string) (exit bool) {
 		err := addClient(db)
 		if err != nil {
 			log.Printf("can't get all products: %v", err)
-			return false // TODO: may be log fatal
+			return false
 		}
 	case "2":
 		err := updateBalance(db)
@@ -117,6 +104,9 @@ func authorizedOperationsLoop(db *sql.DB, cmd string) (exit bool) {
 			log.Printf("can't add sale: %v", err)
 			return true
 		}
+	case "5":
+		operationsLoop(db, exportImportOperationsLoop, ImportExportOperationsLoop )
+
 
 	case "q":
 		return true
@@ -224,7 +214,7 @@ func addAtm(db *sql.DB) (err error) {
 	err = core.AddAtm(core.Atm{
 		Id:     0,
 		Name:   name,
-		Street: street,
+		Address: street,
 	}, db)
 	if err != nil {
 		return err
@@ -283,4 +273,63 @@ func updateBalance(db *sql.DB) (err error) {
 	}
 	fmt.Println("Счет клиента успешно добавлен!")
 	return nil
+}
+
+func ImportExportOperationsLoop(db *sql.DB, cmd string) bool {
+	switch cmd {
+	case "1":
+		err := core.ExportAtmsToJSON(db)
+		fmt.Println("Список банкоматов успешно экспортирован в JSON")
+		if err != nil {
+			log.Println(err)
+		}
+	case "2":
+		err := core.ExportClientsToJSON(db)
+		fmt.Println("Список клиентов успешно экспортирован в JSON")
+		if err != nil {
+			log.Println(err)
+		}
+	case "3":
+		err := core.ExportAtmsToXML(db)
+		fmt.Println("Список банкоматов успешно экспортирован в XML")
+		if err != nil {
+			log.Println(err)
+		}
+	case "4":
+		err := core.ExportClientsToXML(db)
+		fmt.Println("Список клиентов успешно экспортирован в XML")
+		if err != nil {
+			log.Println(err)
+		}
+	case "5":
+		err := core.ImportAtmsFromJSON(db)
+		fmt.Println("Список банкоматов успешно импортирован в JSON")
+		if err != nil {
+			log.Print(err)
+		}
+	case "6":
+		err := core.ImportClientsFromJSON(db)
+		fmt.Println("Список клиентов успешно импортирован в JSON")
+		if err != nil {
+			log.Println(err)
+		}
+	case "7":
+		err := core.ImportAtmsFromXML(db)
+		fmt.Println("Список банкоматов успешно импортирован в XML")
+		if err != nil {
+			log.Println(err)
+		}
+	case "8":
+		err := core.ImportClientsFromXML(db)
+		fmt.Println("Список клиентов успешно импортирован в XML")
+		if err != nil {
+			log.Println(err)
+		}
+	case "q":
+		operationsLoop(db, authorizedOperations, authorizedOperationsLoop)
+	default:
+		fmt.Printf("Вы выбрали неверную команду: %s\n", cmd)
+	}
+
+	return false
 }

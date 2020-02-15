@@ -142,7 +142,7 @@ func printAtm(atms []core.Atm) {
 			"id: %d, name: %s, street:%s\n",
 			atm.Id,
 			atm.Name,
-			atm.Street,
+			atm.Address,
 		)
 	}
 }
@@ -162,11 +162,9 @@ func printClientBalance(listBalance []core.Client)  {
 func printServiceList(serviceList []core.Services)  {
 	for _, listService := range serviceList {
 		fmt.Printf(
-			"id: %d, name: %s, balance:%d\n",
+			"id: %d, name: %s\n",
 			listService.Id,
 			listService.Name,
-			listService.Balance,
-
 		)
 	}
 }
@@ -187,7 +185,7 @@ func handleLoginForClient(db *sql.DB) (id int64,ok bool, err error) {
 		return -1,false, err
 	}
 
-	id, ok, err = core.Login(login, password, db)
+  id, ok, err = core.Login(login, password, db)
 	if err != nil {
 		return -1,false, err
 	}
@@ -198,7 +196,7 @@ func handleLoginForClient(db *sql.DB) (id int64,ok bool, err error) {
 func transaction(db *sql.DB)(err error)  {
 
 	var balanceNumber uint64
-	fmt.Print("Введите  номер своего счёта телефон: ")
+	fmt.Print("Введите  номер своего счёта: ")
 	_, err = fmt.Scan(&balanceNumber)
 	if err != nil {
 		return err
@@ -309,6 +307,7 @@ func payForServices(db *sql.DB)(err error){
 		Balance: balance,
 	}, db)
 	if err != nil {
+		fmt.Println("Извините у вас мало денег")
 		return err
 	}
 	fmt.Println("Денги переведенный успешно переведенный!")
